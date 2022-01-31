@@ -12,10 +12,10 @@ def run():
     sorted_stations = stations_by_distance(stations, (52.2053, 0.1218))
 
     # Print the name, town and distance of the 10 closest stations from Cambridge city centre
-    print([(station[0].name, station[0].town, station[1]) for station in sorted_stations[:10]])
+    print("The 10 closest stations are: " + str([(station[0].name, station[0].town, station[1]) for station in sorted_stations[:10]]))
 
     # Print the name, town and distance of the 10 furthest stations from Cambridge city centre
-    print([(station[0].name, station[0].town, station[1]) for station in sorted_stations[-10:]])
+    print("\nThe 10 furthest stations are: " + str([(station[0].name, station[0].town, station[1]) for station in sorted_stations[-10:]]))
 
 
 if __name__ == "__main__":
