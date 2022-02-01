@@ -8,14 +8,17 @@ def run():
     # Build list of stations
     stations = build_station_list()
 
-    # Filter list of stations by distance to those within 10km of the Cambridge city centre, sorted by name alphabetically
+    # Filter list of stations by distance to those within 10km of the Cambridge city centre
     filter_radius = 10
     cam_centre = (52.2053, 0.1218)
-    station_names_within_radius = stations_within_radius(stations, cam_centre, filter_radius)
-    station_names_within_radius.sort()
+    station_list = stations_within_radius(stations, cam_centre, filter_radius)
+    
+    # Extract list of names and sort alphabetically
+    station_names_list = [station.name for station in station_list]
+    station_names_list.sort()
 
     # Print list of names
-    print(station_names_within_radius)
+    print(station_names_list)
 
 if __name__ == "__main__":
     print("*** Task 1C: CUED Part IA Flood Warning System ***")
