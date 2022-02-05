@@ -22,7 +22,7 @@ def stations_by_distance(stations, p):
 
 
 def stations_within_radius(stations, centre, r):
-    """For a list of station objects (stations) and a coordinate tuple (centre),
+    """For a list of MonitoringStation objects (stations) and a coordinate tuple (centre),
     returns a list of all the stations within in a radius r (in km) of the centre coordinate."""
 
     # List to compile stations within radius
@@ -68,3 +68,29 @@ def rivers_with_station(stations):
         rivers.add(station.river)
 
     return rivers
+
+def rivers_by_station_number(stations, N):
+    """For a list of MonitoringStation objects (stations), returns a list of 
+    tuples (river name, number of stations) of the names of the N rivers with 
+    the greatest number of stations, sorted by their number of stations.
+    Note that, if there are more rivers with the same number of stations as the 
+    Nth entry, these rivers will be included in the list."""
+
+    # Obtain dictionary of rivers with list of monitoring stations for each river
+    rivers = stations_by_river(stations)
+
+    # Sort rivers by number of stations (in descending order)
+    sorted_rivers = sorted(rivers.items(), key=lambda k: len(k[1]), reverse = True)
+
+    # List of tuples to return
+    rivers_and_station_num = []
+
+    i = 0
+    #Add tuples to list for first N items and from then on if number of stations equal to that of the Nth entry
+    #'i != 0 term' means it is not checked on first iteration which would throw error as no item previous to 0th index
+    while i < N or (i != 0 and len(sorted_rivers[i-1][1]) == len(sorted_rivers[i][1])):
+        rivers_and_station_num.append((sorted_rivers[i][0], len(sorted_rivers[i][1])))
+        i += 1
+    
+    return rivers_and_station_num
+    
