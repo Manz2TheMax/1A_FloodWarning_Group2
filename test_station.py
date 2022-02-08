@@ -17,7 +17,8 @@ def test_create_monitoring_station():
     trange = (-2.3, 3.4445)
     river = "River X"
     town = "My Town"
-    s = MonitoringStation(s_id, m_id, label, coord, trange, river, town)
+    catchment = "My Catchment"
+    s = MonitoringStation(s_id, m_id, label, coord, trange, river, town, catchment)
 
     assert s.station_id == s_id
     assert s.measure_id == m_id
@@ -37,10 +38,11 @@ def test_typical_range_consistent():
     coord = (-2.0, 4.0)
     river = "River X"
     town = "My Town"
+    catchment = "My Catchment"
 
     # Check one - returns true for consistent value
     trange_1 = (-1.0, 1.0)
-    s = MonitoringStation(s_id, m_id, label, coord, trange_1, river, town)
+    s = MonitoringStation(s_id, m_id, label, coord, trange_1, river, town, catchment)
     assert s.typical_range_consistent() == True
 
     # Check two - returns true if high and low values are equal

@@ -36,6 +36,11 @@ def build_station_list(use_cache=True):
         if 'riverName' in e:
             river = e['riverName']
 
+        # Extract catchment name (not always available)
+        catchment = None
+        if 'catchmentName' in e:
+            catchment = e['catchmentName']
+
         # Attempt to extract typical range (low, high)
         try:
             typical_range = (float(e['stageScale']['typicalRangeLow']),
@@ -53,7 +58,8 @@ def build_station_list(use_cache=True):
                 coord=(float(e['lat']), float(e['long'])),
                 typical_range=typical_range,
                 river=river,
-                town=town)
+                town=town,
+                catchment=catchment)
             stations.append(s)
         except Exception:
             # Not all required data on the station was available, so

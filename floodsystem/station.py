@@ -10,7 +10,7 @@ for manipulating/modifying station data
 class MonitoringStation:
     """This class represents a river level monitoring station"""
     def __init__(self, station_id, measure_id, label, coord, typical_range,
-                 river, town):
+                 river, town, catchment):
 
         self._station_id = station_id
         self._measure_id = measure_id
@@ -25,17 +25,21 @@ class MonitoringStation:
         self._typical_range = typical_range
         self._river = river
         self._town = town
+        self._catchment = catchment
 
         self._latest_level = None
 
+
+
     def __repr__(self):
-        d = "Station name:     {}\n".format(self._name)
-        d += "   id:            {}\n".format(self._station_id)
-        d += "   measure id:    {}\n".format(self._measure_id)
-        d += "   coordinate:    {}\n".format(self._coord)
-        d += "   town:          {}\n".format(self._town)
-        d += "   river:         {}\n".format(self._river)
-        d += "   typical range: {}".format(self._typical_range)
+        d = "Station name:     {}\n".format(self.name)
+        d += "   id:            {}\n".format(self.station_id)
+        d += "   measure id:    {}\n".format(self.measure_id)
+        d += "   coordinate:    {}\n".format(self.coord)
+        d += "   town:          {}\n".format(self.town)
+        d += "   river:         {}\n".format(self.river)
+        d += "   typical range: {}".format(self.typical_range)
+        d += "   typical range: {}".format(self.catchment_name)
         return d
 
     def typical_range_consistent(self):
@@ -63,8 +67,6 @@ class MonitoringStation:
     def del_station_id(self):
         del self._station_id
 
-    station_id = property(get_station_id, set_station_id, del_station_id, "Station ID")
-
     def get_measure_id(self):
         return self._measure_id
 
@@ -73,8 +75,6 @@ class MonitoringStation:
 
     def del_measure_id(self):
         del self._measure_id
-
-    measure_id = property(get_measure_id, set_measure_id, del_measure_id, "Measure ID")
 
     def get_name(self):
         return self._name
@@ -85,8 +85,6 @@ class MonitoringStation:
     def del_name(self):
         del self._name
 
-    name = property(get_name, set_name, del_name, "Name")
-
     def get_coord(self):
         return self._coord
 
@@ -95,8 +93,6 @@ class MonitoringStation:
 
     def del_coord(self):
         del self._coord
-
-    coord = property(get_coord, set_coord, del_coord, "Coordinates")
 
     def get_typical_range(self):
         return self._typical_range
@@ -107,8 +103,6 @@ class MonitoringStation:
     def del_typical_range(self):
         del self._typical_range
 
-    typical_range = property(get_typical_range, set_typical_range, del_typical_range, "Typical range")
-
     def get_river(self):
         return self._river
 
@@ -117,8 +111,6 @@ class MonitoringStation:
 
     def del_river(self):
         del self._river
-
-    river = property(get_river, set_river, del_river, "River")
 
     def get_town(self):
         return self._town
@@ -129,8 +121,6 @@ class MonitoringStation:
     def del_town(self):
         del self._town
 
-    town = property(get_town, set_town, del_town, "Town")
-
     def get_latest_level(self):
         return self._latest_level
 
@@ -140,9 +130,24 @@ class MonitoringStation:
     def del_latest_level(self):
         del self._latest_level
 
+    def get_catchment(self):
+        return self._catchment_name
+
+    def set_catchment(self, value):
+        self._catchment_name = value
+
+    def del_catchment(self):
+        del self._catchment_name
+
+    station_id = property(get_station_id, set_station_id, del_station_id, "Station ID")
+    measure_id = property(get_measure_id, set_measure_id, del_measure_id, "Measure ID")
+    name = property(get_name, set_name, del_name, "Name")
+    coord = property(get_coord, set_coord, del_coord, "Coordinates")
+    typical_range = property(get_typical_range, set_typical_range, del_typical_range, "Typical range")
+    river = property(get_river, set_river, del_river, "River")
+    town = property(get_town, set_town, del_town, "Town")
     latest_level = property(get_latest_level, set_latest_level, del_latest_level, "Latest level")
-
-
+    catchment = property(get_catchment, set_catchment, del_catchment, "Catchment")
 
 
 def inconsistent_typical_range_stations(stations):
