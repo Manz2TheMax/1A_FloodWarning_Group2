@@ -38,8 +38,8 @@ class MonitoringStation:
         d += "   coordinate:    {}\n".format(self.coord)
         d += "   town:          {}\n".format(self.town)
         d += "   river:         {}\n".format(self.river)
-        d += "   typical range: {}".format(self.typical_range)
-        d += "   typical range: {}".format(self.catchment_name)
+        d += "   typical range: {}\n".format(self.typical_range)
+        d += "   catchment area: {}".format(self.catchment)
         return d
 
     def typical_range_consistent(self):
@@ -131,13 +131,13 @@ class MonitoringStation:
         del self._latest_level
 
     def get_catchment(self):
-        return self._catchment_name
+        return self._catchment
 
     def set_catchment(self, value):
-        self._catchment_name = value
+        self._catchment = value
 
     def del_catchment(self):
-        del self._catchment_name
+        del self._catchment
 
     station_id = property(get_station_id, set_station_id, del_station_id, "Station ID")
     measure_id = property(get_measure_id, set_measure_id, del_measure_id, "Measure ID")
