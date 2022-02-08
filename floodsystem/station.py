@@ -12,30 +12,30 @@ class MonitoringStation:
     def __init__(self, station_id, measure_id, label, coord, typical_range,
                  river, town):
 
-        self.station_id = station_id
-        self.measure_id = measure_id
+        self._station_id = station_id
+        self._measure_id = measure_id
 
         # Handle case of erroneous data where data system returns
         # '[label, label]' rather than 'label'
-        self.name = label
+        self._name = label
         if isinstance(label, list):
-            self.name = label[0]
+            self._name = label[0]
 
-        self.coord = coord
-        self.typical_range = typical_range
-        self.river = river
-        self.town = town
+        self._coord = coord
+        self._typical_range = typical_range
+        self._river = river
+        self._town = town
 
-        self.latest_level = None
+        self._latest_level = None
 
     def __repr__(self):
-        d = "Station name:     {}\n".format(self.name)
-        d += "   id:            {}\n".format(self.station_id)
-        d += "   measure id:    {}\n".format(self.measure_id)
-        d += "   coordinate:    {}\n".format(self.coord)
-        d += "   town:          {}\n".format(self.town)
-        d += "   river:         {}\n".format(self.river)
-        d += "   typical range: {}".format(self.typical_range)
+        d = "Station name:     {}\n".format(self._name)
+        d += "   id:            {}\n".format(self._station_id)
+        d += "   measure id:    {}\n".format(self._measure_id)
+        d += "   coordinate:    {}\n".format(self._coord)
+        d += "   town:          {}\n".format(self._town)
+        d += "   river:         {}\n".format(self._river)
+        d += "   typical range: {}".format(self._typical_range)
         return d
 
     def typical_range_consistent(self):
@@ -53,6 +53,97 @@ class MonitoringStation:
 
         # If all checks are passed, data is consistent (so returns True)
         return True
+
+    def get_station_id(self):
+        return self._station_id
+
+    def set_station_id(self, value):
+        self._station_id = value
+
+    def del_station_id(self):
+        del self._station_id
+
+    station_id = property(get_station_id, set_station_id, del_station_id, "Station ID")
+
+    def get_measure_id(self):
+        return self._measure_id
+
+    def set_measure_id(self, value):
+        self._measure_id = value
+
+    def del_measure_id(self):
+        del self._measure_id
+
+    measure_id = property(get_measure_id, set_measure_id, del_measure_id, "Measure ID")
+
+    def get_name(self):
+        return self._name
+
+    def set_name(self, value):
+        self._name = value
+
+    def del_name(self):
+        del self._name
+
+    name = property(get_name, set_name, del_name, "Name")
+
+    def get_coord(self):
+        return self._coord
+
+    def set_coord(self, value):
+        self._coord = value
+
+    def del_coord(self):
+        del self._coord
+
+    coord = property(get_coord, set_coord, del_coord, "Coordinates")
+
+    def get_typical_range(self):
+        return self._typical_range
+
+    def set_typical_range(self, value):
+        self._typical_range = value
+
+    def del_typical_range(self):
+        del self._typical_range
+
+    typical_range = property(get_typical_range, set_typical_range, del_typical_range, "Typical range")
+
+    def get_river(self):
+        return self._river
+
+    def set_river(self, value):
+        self._typical_range = value
+
+    def del_river(self):
+        del self._river
+
+    river = property(get_river, set_river, del_river, "River")
+
+    def get_town(self):
+        return self._town
+
+    def set_town(self, value):
+        self._town = value
+
+    def del_town(self):
+        del self._town
+
+    town = property(get_town, set_town, del_town, "Town")
+
+    def get_latest_level(self):
+        return self._latest_level
+
+    def set_latest_level(self, value):
+        self._latest_level = value
+
+    def del_latest_level(self):
+        del self._latest_level
+
+    latest_level = property(get_latest_level, set_latest_level, del_latest_level, "Latest level")
+
+
+
 
 def inconsistent_typical_range_stations(stations):
     """For a list of MonitoringStation objects (stations), returns a list of
