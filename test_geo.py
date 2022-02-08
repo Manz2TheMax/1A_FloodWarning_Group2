@@ -4,6 +4,8 @@ from floodsystem.stationdata import build_station_list
 from floodsystem.geo import stations_within_radius
 from floodsystem.geo import rivers_by_station_number
 from floodsystem.geo import stations_by_distance
+from floodsystem.geo import stations_by_river
+from floodsystem.geo import rivers_with_station
 from haversine import haversine as hav  # haversine function for distance
 
 def test_stations_within_radius():
@@ -66,6 +68,8 @@ def test_rivers_by_station_number():
 
 
 def test_stations_by_distance():
+    """Tests subroutine stations_by_distance"""
+
     # Build list of stations
     stations = build_station_list()
 
@@ -91,9 +95,11 @@ def test_stations_by_distance():
     # Store the 10 closest stations in the same format at the known ones
     calculated_closest_stations = [(station[0].name, station[0].town, station[1]) for station in sorted_stations[:10]]
 
-    # Assert that the calculated closest stations are the same as the known ones
+    # Check if the calculated closest stations are the same as the known ones
     for known, calculated in zip(known_closest_stations, calculated_closest_stations):
+        # Assert that calculated stations and known stations have the same name
         assert known[0] == calculated[0]
+        # Assert that calculated stations and known stations are on the same river
         assert known[1] == calculated[1]
         # Assert the difference in distance is less than or equal to one meter
         assert abs(known[2] - calculated[2]) * 1000 <= 1
@@ -111,12 +117,71 @@ def test_stations_by_distance():
                                ('Penberth', 'Penberth', 467.53367291629183)]
 
     # Store the 10 furthest stations in the same format at the known ones
-    calculated_furthest_stations = [(station[0].name, station[0].town, station[1]) for station in
-                                    sorted_stations[-10:]]
+    calculated_furthest_stations = [(station[0].name, station[0].town, station[1]) for station in sorted_stations[-10:]]
 
-    # Assert that the calculated closest stations are the same as the known ones
+    # Check if the calculated closest stations are the same as the known ones
     for known, calculated in zip(known_furthest_stations, calculated_furthest_stations):
+        # Assert that calculated stations and known stations have the same name
         assert known[0] == calculated[0]
+        # Assert that calculated stations and known stations are on the same river
         assert known[1] == calculated[1]
         # Assert the difference in distance is less than or equal to one meter
         assert abs(known[2] - calculated[2]) * 1000 <= 1
+
+
+def test_rivers_with_station():
+    """Tests subroutine rivers_with_station"""
+
+    # Build list of stations
+    stations = build_station_list()
+
+    # Create list of rivers with least one monitoring station
+    river_names = list(rivers_with_station(stations))
+
+    # List of known rivers with at least one monitoring station
+    known_rivers = ['Addlestone Bourne', 'River Adur', 'Aire Washlands', 'Alconbury Brook',
+                    'Aller Brook', 'River Alre', 'River Alt', 'Alverthorpe Beck', 'Ampney Brook']
+
+    # Assert that the known rivers are in the output of the function
+    for river in known_rivers:
+        assert river in river_names
+
+    # List of all monitoring stations on river Cam
+    cam_stations = [station for station in stations if station.river == "River Cam"]
+
+    # Assert that the output does not include duplicate names
+    assert rivers_with_station(cam_stations) == {"River Cam"}
+
+
+def test_stations_by_river():
+    """Tests subroutine stations_by_river"""
+
+    # Build list of stations
+    stations = build_station_list()
+
+    # Dictionary containing river names and their corresponding stations
+    rivers = stations_by_river(stations)
+
+    # Create lists of stations on rivers Aire, Cam and Thames
+    stations_on_aire = [station.name for station in rivers["River Aire"]]
+    stations_on_cam = [station.name for station in rivers["River Cam"]]
+    stations_on_thames = [station.name for station in rivers["River Thames"]]
+
+    # Create a list containing the lists above
+    all_stations = [stations_on_aire, stations_on_cam, stations_on_thames]
+
+    # Dictionary containing lists of some known stations on rivers Aire, Cam and Thames
+    known_stations = {"River Aire":
+                      ['Airmyn', 'Apperley Bridge', 'Armley', 'Beal Weir Bridge', 'Bingley',
+                       'Birkin Holme Washlands', 'Carlton Bridge', 'Castleford', 'Chapel Haddlesey', 'Cononley'],
+                      "River Cam":
+                      ['Cam', 'Cambridge', 'Cambridge Baits Bite', 'Cambridge Jesus Lock', 'Dernford',
+                       'Weston Bampfylde'],
+                      "River Thames":
+                      ['Abingdon Lock', 'Bell Weir', 'Benson Lock', 'Boulters Lock', 'Bray Lock', 'Buscot Lock',
+                       'Caversham Lock', 'Chertsey Lock', 'Cleeve Lock', 'Clifton Lock', 'Cookham Lock', 'Cricklade']}
+
+    # Assert that for each river, the known stations are in the output of the function
+    for known_list, output_list in zip(known_stations.values(), all_stations):
+        for known_station in known_list:
+            assert known_station in output_list
