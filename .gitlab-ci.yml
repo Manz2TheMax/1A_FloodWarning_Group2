@@ -20,6 +20,7 @@ test:
   - python Task1C.py
   - python Task1D.py
   - python Task1E.py
+  - python Task1F.py
   - python display_stations.py
   - python Task2A.py
   - python Task2D.py
