@@ -29,8 +29,6 @@ class MonitoringStation:
 
         self._latest_level = None
 
-
-
     def __repr__(self):
         d = "Station name:     {}\n".format(self.name)
         d += "   id:            {}\n".format(self.station_id)
@@ -57,6 +55,23 @@ class MonitoringStation:
 
         # If all checks are passed, data is consistent (so returns True)
         return True
+
+    def relative_water_level(self):
+        """Returns latest level shifted and scaled so typical low is 0 and typical high is 1.
+        Returns None if typical range is inconsistent.
+
+        Note: "update_water_levels" function needs to be called at least once for this function to work."""
+
+        # Check if typical range is consistent and there is a value for the latest level
+        if self.typical_range_consistent() and self._latest_level is not None:
+            # Calculate the difference between typical maximum and minimum
+            typical_difference = self._typical_range[1] - self._typical_range[0]
+
+            # Return the shifted and scaled value for the latest level
+            return (self._latest_level - self._typical_range[0]) / typical_difference
+
+        # Return "None" if the range is inconsistent or no latest level is recorded
+        return None
 
     def get_station_id(self):
         return self._station_id
