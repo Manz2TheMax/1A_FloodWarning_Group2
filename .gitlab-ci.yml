@@ -23,4 +23,6 @@ test:
   - python Task1F.py
   - python display_stations.py
   - python Task2A.py
+  - python Task2B.py
   - python Task2D.py
+  - python Task2E.py
