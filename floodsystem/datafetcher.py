@@ -135,6 +135,10 @@ def fetch_measure_levels(measure_id, dt):
 
         # Append data
         dates.append(d)
-        levels.append(measure['value'])
+        # Added the check to prevent a crash in case "value" is not in "measure"
+        if "value" in measure.keys():
+            levels.append(measure['value'])
+        else:
+            levels.append(None)
 
     return dates, levels
