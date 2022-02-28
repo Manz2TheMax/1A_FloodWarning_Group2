@@ -26,6 +26,7 @@ def build_station_list(use_cache=True):
     # Build list of MonitoringStation objects
     stations = []
     for e in data["items"]:
+
         # Extract town string (not always available)
         town = None
         if 'town' in e:
@@ -40,6 +41,7 @@ def build_station_list(use_cache=True):
         catchment = None
         if 'catchmentName' in e:
             catchment = e['catchmentName']
+
 
         # Attempt to extract typical range (low, high)
         try:

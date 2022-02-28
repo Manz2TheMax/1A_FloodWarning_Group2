@@ -93,4 +93,25 @@ def rivers_by_station_number(stations, N):
         i += 1
     
     return rivers_and_station_num
+
+def stations_by_town(stations):
+    """For a list of MonitoringStation objects (stations),
+    returns a dictionary that maps town names (key) to a list of MonitoringStation objects on a given town."""
+
+    # Dictionary containing town names and their corresponding stations
+    towns = {}
+
+    for station in stations:
+        # Check if town is already in the dictionary
+        if station.town in towns:
+            # Check if the station has already been added to the list
+            if station not in towns[station.town]:
+                towns[station.town].append(station)
+
+        else:
+            towns.update({station.town: [station]})
+
+    return towns
+
+
     

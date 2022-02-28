@@ -9,6 +9,10 @@ def polyfit(dates, levels, p):
     data point in the list will be treated as x=0 (vertical intercept) - d0 is the offset of the horizontal 
     axis as a result."""
 
+    #If inconsistent data, return None
+    if dates == None or levels == None:
+        return None
+
     #Convert dates to values 
     x = date.date2num(dates)
 

@@ -2,9 +2,13 @@
 
 from floodsystem.stationdata import build_station_list
 from floodsystem.stationdata import update_water_levels
-from floodsystem.flood import stations_highest_rel_level
+from floodsystem.flood import get_flood_risk_rating, get_level_rise, get_station_flood_risk, stations_highest_rel_level
 from floodsystem.flood import stations_level_over_threshold
+from floodsystem.flood import get_town_flood_risk
+from floodsystem.geo import stations_by_town
 from floodsystem.station import MonitoringStation
+from floodsystem.datafetcher import fetch_measure_levels
+from datetime import timedelta
 
 def test_stations_highest_rel_level():
     """Tests subroutine stations_highest_rel_level"""
@@ -68,3 +72,81 @@ def test_stations_level_over_threshold():
 
     # Assert the function does not crash if no stations are over the threshold or no latest level is given
     assert stations_level_over_threshold([test_station_3, test_station_4], 512) == []
+
+def test_get_station_flood_risk():
+    assert 0 == 0
+
+def test_get_station_flood__risk():
+    """Tests subroutine get_station_flood_risk"""
+
+    # Build list of stations and get water (will test first station)
+    stations = build_station_list()
+    update_water_levels(stations)
+    station_to_test = stations[0]
+
+    #Get station risk, relative water level, and level rise for station
+    station_risk = get_station_flood_risk(station_to_test)
+    rel_water_level = station_to_test.relative_water_level()
+    level_rise = get_level_rise(station_to_test)
+
+    #Ensure given relative water level and level rise gives correct result
+    if rel_water_level > 2 and level_rise > 0.1:
+        assert station_risk == 4
+    elif rel_water_level > 2 and level_rise < 0:
+        assert station_risk == 2
+    elif rel_water_level > 2:
+        assert station_risk == 3
+    elif rel_water_level < 2 and level_rise > 0.1:
+        assert station_risk == 2
+    elif rel_water_level < 2 and level_rise < 0:
+        assert station_risk == 0
+    else:
+        assert station_risk == 1
+
+def test_get_level_rise():
+    """Tests subroutine get_level_rise"""
+
+    # Build list of stations and get water
+    stations = build_station_list()
+    update_water_levels(stations)
+
+    #Assert that when no data found, level rise is None
+    for i in range(20):
+        level_rise = get_level_rise(stations[i])
+        times, values = fetch_measure_levels(stations[i].measure_id, timedelta(days=2))
+        if (times or values) == False:
+            assert level_rise == None
+
+def test_get_town_flood_risk():
+    """Tests subroutine get_town_flood_risk"""
+
+    # Build list of stations and get water
+    stations = build_station_list()
+    update_water_levels(stations)
+
+    #Get list of time and choose first town to test
+    towns = stations_by_town(stations)
+    town_to_test = list(towns.keys())[0]
+
+    town_flood_risk = get_town_flood_risk(town_to_test, towns) #Get town flood risk
+
+    #Assert risks of each station do not exceed town risk, and that town risk is same as maximum station risk
+    max_risk = 0
+    for station in towns[town_to_test]:
+        station_risk = get_station_flood_risk(station)
+        assert station_risk <= town_flood_risk
+        if station_risk > max_risk:
+            max_risk = station_risk
+    assert max_risk == town_flood_risk
+
+
+def test_get_flood_risk_rating():
+    """Tests subroutine flood_risk_rating"""
+
+    assert get_flood_risk_rating(0) == "Low"
+    assert get_flood_risk_rating(1) == "Low"
+    assert get_flood_risk_rating(2) == "Moderate"
+    assert get_flood_risk_rating(3) == "High"
+    assert get_flood_risk_rating(4) == "Severe"
+    assert get_flood_risk_rating(None) == None
+    assert get_flood_risk_rating(5) == None
