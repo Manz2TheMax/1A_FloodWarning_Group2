@@ -12,7 +12,7 @@ def run():
 
     town_names = list(towns.keys())
 
-    for i in range(20):
+    for i in range(10):
         print(f"{town_names[i]} {get_flood_risk_rating(get_town_flood_risk(town_names[i], towns))}")
         
 

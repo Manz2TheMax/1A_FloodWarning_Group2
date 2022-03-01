@@ -89,7 +89,7 @@ def get_level_rise(station):
     times, values = fetch_measure_levels(station.measure_id, timedelta(days=2))
     
     #Only continue if data available, otherwise return None
-    if times and values:
+    if times and values and     (None in times or None in values) == False:
         #Get polynomial approximation of
         poly, d0 = polyfit(times, values, p=4)
 
